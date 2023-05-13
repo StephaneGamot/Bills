@@ -86,28 +86,28 @@ export default class {
   }
 
   handleEditTicket(e, bill, bills) {
-    if (this.counter === undefined || this.id !== bill.id) this.counter = 0
-    if (this.id === undefined || this.id !== bill.id) this.id = bill.id
-    if (this.counter % 2 === 0) {
+    if (this.counter === undefined || this.id !== bill.id) this.counter = 0    // Si le compteur est indéfini ou si l'ID actuel est différent de l'ID alors le compteur est remis à 0 (quand une nouvelle fact est ouverte)
+    if (this.id === undefined || this.id !== bill.id) this.id = bill.id        // Je réinitialise l'ID si l'ID est indéfini ou différent de l'ID précédent (cela permet  que les ID correspondent)
+    if (this.counter % 2 === 0) {                                              // Si le compteur est un nombre divisible par 2 (un nombre pair)
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
       })
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
-      $('.dashboard-right-container div').html(DashboardFormUI(bill))
+      $('.dashboard-right-container div').html(DashboardFormUI(bill))          // "dashboard-right-container div" sera remplacé dans le HTML par DashboardFormUI(bill)
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++
     } else {
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
-      $('.dashboard-right-container div').html(`
+      $('.dashboard-right-container div').html(`                               
         <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
       `)
       $('.vertical-navbar').css({ height: '120vh' })
       this.counter ++
     }
-    $('#icon-eye-d').click(this.handleClickIconEye)
-    $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
-    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))
+    $('#icon-eye-d').click(this.handleClickIconEye)                       // Ajoute un gestionnaire d'événements "click" à "#icon-eye-d", qui appelle this.handleClickIconEye.
+    $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))  // Ajoute un gestionnaire d'événements "click" au bouton accepter qui appelle handleAcceptSubmit ()
+    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))  // Ajoute un gestionnaire d'événements "click" au bouton refuser qui appelle handleRefuseSubmit ()
   }
 
   handleAcceptSubmit = (e, bill) => {
@@ -135,14 +135,14 @@ export default class {
     if (this.index === undefined || this.index !== index) this.index = index   // Je réinitialise l'index si l'index est indéfini ou différent de l'index précédent
     if (this.counter % 2 === 0) {                                              // Si le compteur est un nombre divisible par 2 (un nombre pair)
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})          // L'icon ne tourne pas (o°)
-      $(`#status-bills-container${this.index}`)                                //
-        .html(cards(filteredBills(bills, getStatus(this.index))))              //
-      this.counter ++                                                          //
+      $(`#status-bills-container${this.index}`)                                // Je sélectionne ()
+        .html(cards(filteredBills(bills, getStatus(this.index))))              // Je remplace le contenu HTML par "cards()"
+      this.counter ++                                                          // J'incrémente
     } else {                                                                   // Si c 'est un chiffre impair 
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})         //  L'icon tourne (90°)
+      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})         // L'icon tourne (90°)
       $(`#status-bills-container${this.index}`)                                // Elle efface le contenu du conteneur de billets
-        .html("")                                                              //
-      this.counter ++                                                          // elle incremente 
+        .html("")                                                              // Va effacer le contenu HTML avec l'ID ... `#status-bills-container${this.index}`
+      this.counter ++                                                          // J'incremente 
     }
 
     /* si l'attribut 'data-listener' est absent (uniquement s’il est absent), 

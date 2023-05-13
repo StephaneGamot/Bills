@@ -23,30 +23,30 @@ beforeEach(() => {
 
 describe("Given I am connected as an employee", () => {
 	describe("When I am on NewBill Page", () => {
-		test("Then mail icon in vertical layout should be highlighted", () => {              // On va vérifier ici que le "mail icon" est "brillant"
-			const icon = screen.getByTestId("icon-mail");                                      // Avec "getByTestId" on va sélectionner un élément spécifique sur la page
+		test("Then mail icon in vertical layout should be highlighted", () => {// On va vérifier ici que le "mail icon" est "brillant"
+			const icon = screen.getByTestId("icon-mail");                      // Avec "getByTestId" on va sélectionner un élément spécifique sur la page
 			// To-do write assertion
-			expect(icon.className).toBe("active-icon");                                        // Et ici on s'attend (on le verifie) à ce que "icon"  ait une classe nommée "active-icon"
+			expect(icon.className).toBe("active-icon");                        // Et ici on s'attend (on le verifie) à ce que "icon"  ait une classe nommée "active-icon"
 		});
 		// POST
 		test("Then verify the file bill", async () => {
-			jest.spyOn(mockStore, "bills");                                                    // Création d'un espion
+			jest.spyOn(mockStore, "bills");                                    // Création d'un espion
 
-			const onNavigate = (pathname) => {                                                 // simulation que l'on navigue vers une autre page
+			const onNavigate = (pathname) => {                                 // simulation que l'on navigue vers une autre page
 				document.body.innerHTML = ROUTES({ pathname });
 			};
 
-			window.localStorage.setItem(  	                                                   // Cela simule un utilisateur connecté en tant qu'"Employee".
+			window.localStorage.setItem(  	                                   // Cela simule un utilisateur connecté en tant qu'"Employee".
 				"user",
 				JSON.stringify({
 					type: "Employee",
 				})
 			);
 
-			const html = NewBillUI();                                                          // j'apelle la fonction qui représente NewBillUI() (en simple le contenu de la page en HTML)
+			const html = NewBillUI();                                          // j'apelle la fonction qui représente NewBillUI() (en simple le contenu de la page en HTML)
 			document.body.innerHTML = html;
 
-			const newBillInit = new NewBill({                                                  // Création d'un instance de classe qui contient .....
+			const newBillInit = new NewBill({                                  // Création d'un instance de classe qui contient .....
 				document,
 				onNavigate,
 				store: mockStore,

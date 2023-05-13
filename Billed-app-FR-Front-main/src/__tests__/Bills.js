@@ -49,11 +49,11 @@ apres recherche on retrouve divIcon1.classList.add('active-icon')*/
 				store: mockStore,
 				localStorage: window.localStorage,
 			});
-			const spyGetBills = jest.spyOn(newBills, "getBills");
-			const billsToDisplay = await newBills.getBills();
-			const mockedBills = await mockStore.bills().list();
+			const spyGetBills = jest.spyOn(newBills, "getBills");                         //Création d’un espion avec Jest 
+			const billsToDisplay = await newBills.getBills();                             // On appelle la méthode getBills et on attend que la promesse soit résolue, elle est stocké dans la const.
+			const mockedBills = await mockStore.bills().list();                           // On appelle la méthode list du mockStore.bills(), pour simulé une facture, qu'il stocke dans la const
 
-			expect(spyGetBills).toHaveBeenCalledTimes(1);                                 // Je verifie qu'elel n'a été qu'appelé une seule fois
+			expect(spyGetBills).toHaveBeenCalledTimes(1);                                 // Je verifie qu'elle n'a été qu'appelé une seule fois
 			expect(mockedBills.length).toBe(billsToDisplay.length);                       // Je vérifie que le nombre de facture stoké = à celle affiché
 		});
 		// Ce test vérifie que les factures sont triées par ordre chronologique,
@@ -122,7 +122,7 @@ describe("Given I am a user connected as Employee", () => {
 	});
 
 	describe("When an error occurs on API", () => {
-		beforeEach(() => {                                               // J'utilise beforeEach() pour définir les actions qui doivent être effectuées avant
+		beforeEach(() => {                                                 // J'utilise beforeEach() pour définir les actions qui doivent être effectuées avant
 			jest.spyOn(mockStore, "bills");                                // je crée un espion sur ...
 			Object.defineProperty(window, "localStorage", { value: localStorageMock });
 			window.localStorage.setItem(
