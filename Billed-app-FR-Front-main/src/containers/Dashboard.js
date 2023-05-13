@@ -131,26 +131,29 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
-    if (this.counter === undefined || this.index !== index) this.counter = 0
-    if (this.index === undefined || this.index !== index) this.index = index
-    if (this.counter % 2 === 0) {
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
-      $(`#status-bills-container${this.index}`)
-        .html(cards(filteredBills(bills, getStatus(this.index))))
-      this.counter ++
-    } else {
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
-      $(`#status-bills-container${this.index}`)
-        .html("")
-      this.counter ++
+    if (this.counter === undefined || this.index !== index) this.counter = 0   // Si le compteur est indéfini ou si l'index actuel est différent de l'index alors le compteur est à 0
+    if (this.index === undefined || this.index !== index) this.index = index   // Je réinitialise l'index si l'index est indéfini ou différent de l'index précédent
+    if (this.counter % 2 === 0) {                                              // Si le compteur est un nombre divisible par 2 (un nombre pair)
+      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})          // L'icon ne tourne pas (o°)
+      $(`#status-bills-container${this.index}`)                                //
+        .html(cards(filteredBills(bills, getStatus(this.index))))              //
+      this.counter ++                                                          //
+    } else {                                                                   // Si c 'est un chiffre impair 
+      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})         //  L'icon tourne (90°)
+      $(`#status-bills-container${this.index}`)                                // Elle efface le contenu du conteneur de billets
+        .html("")                                                              //
+      this.counter ++                                                          // elle incremente 
     }
 
-    bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
-
+    /* si l'attribut 'data-listener' est absent (uniquement s’il est absent), 
+    j’ajoute un écouteur de clic à l'élément #open-bill${bill.id}, puis j’apelle handleEditTicket() */
+bills.forEach(bill => {
+  if(!$(`#open-bill${bill.id}`).data('listener')) {                               // Je vérifie si l'élément avec l'ID open-bill${bill.id} n'a pas d'écouteur de clic
+    $(`#open-bill${bill.id}`).data('listener', true)                              // Je lui rajoute un addEventListener (true), il a donc un gestionnaire d'événements qui lui est propre, et donc pas de rajout si il est rappelé 
+    $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills)) // J’ ajoute au gestionnaire d'événements "click" qui appellera la fonction handleEditTicket(ses parametres)
+  }      
+})
     return bills
-
   }
 
   getBillsAllUsers = () => {

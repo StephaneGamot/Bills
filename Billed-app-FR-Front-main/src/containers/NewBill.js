@@ -30,10 +30,6 @@ export default class NewBill {
 		} else {
 			const formData = this.createFormData(file);
 
-			const email = JSON.parse(localStorage.getItem("user")).email;
-			formData.append("file", file);
-			formData.append("email", email);
-
 			this.store
 				.bills()
 				.create({
@@ -53,6 +49,7 @@ export default class NewBill {
 				.catch((error) => console.error(error));
 		}
 	};
+	
 	handleSubmit = (e) => {
 		e.preventDefault();
 		console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value);
