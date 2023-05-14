@@ -25,8 +25,8 @@ export default class NewBill {
 		const validExtensions = ["jpg", "jpeg", "png"];                       // creation d'un tableau d'extension à valider
 		const fileExtension = fileName.split(".").pop().toLowerCase();        // je récupere juste l'extension que je garde en minuscule
 		if (!validExtensions.includes(fileExtension)) {                       // si le fichier en question n'a PAS l'extension ....
-			alert("Veuillez sélectionner un fichier jpg ou jpeg ou ou png.");   // je le previens
-			return;                                                             // Et cela s'arrete là
+			alert("Veuillez sélectionner un fichier jpg ou jpeg ou ou png."); // je le previens
+			return;                                                           // Et cela s'arrete là
 		} else {
 			const formData = this.createFormData(file);
 
@@ -67,7 +67,7 @@ export default class NewBill {
 			fileName: this.fileName,
 			status: "pending",
 		};
-		//this.updateBill(bill)
+		
 		this.onNavigate(ROUTES_PATH["Bills"]);
 	};
 

@@ -37,6 +37,7 @@ Pour ça j’ai cherché id='layout-icon1' avec lequel il est lié et
 apres recherche on retrouve divIcon1.classList.add('active-icon')*/
 			expect(windowIcon.classList.contains("active-icon")).toBeTruthy();  // Je vérifie qu'il le contient bien
 		});
+
 		// Ce test vérifie si les factures stockées sont correctement affichées.
 		test("if bills are stored, it should display bills", async () => {
 			const onNavigate = (pathname) => {                                  // onNavigate remplace le contenu du corps du document HTML par le contenu de la route spécifiée.
@@ -56,10 +57,11 @@ apres recherche on retrouve divIcon1.classList.add('active-icon')*/
 			expect(spyGetBills).toHaveBeenCalledTimes(1);                                 // Je verifie qu'elle n'a été qu'appelé une seule fois
 			expect(mockedBills.length).toBe(billsToDisplay.length);                       // Je vérifie que le nombre de facture stoké = à celle affiché
 		});
+
 		// Ce test vérifie que les factures sont triées par ordre chronologique,
 		test("Then bills should be ordered from earliest to latest", () => {
 			const sortedBills = bills.sort((a, b) => new Date(a.date) - new Date(b.date));// Je trie par date
-			document.body.innerHTML = BillsUI({ data: sortedBills });                     // Je mets à jour
+			document.body.innerHTML = BillsUI({ data: sortedBills });                     // Je mets à jour le contenu
 			const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map((a) => a.innerHTML);
 			const chrono = (a, b) => (a < b ? -1 : 1);
 			const datesSorted = [...dates].sort(chrono);
@@ -105,6 +107,7 @@ apres recherche on retrouve divIcon1.classList.add('active-icon')*/
 // integration test GET
 describe("Given I am a user connected as Employee", () => {
 	describe("When I navigate to bills page", () => {
+		
 		// Je récupére les factures à partir d'une fausse API GET
 		test("fetches bills from mock API GET", async () => {
 			localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
@@ -137,6 +140,7 @@ describe("Given I am a user connected as Employee", () => {
 			document.body.appendChild(root);
 			router();
 		});
+
 		// Ce test vérifie quand une erreur se produit lors de la récupération des factures à partir de l'API (erreur 404 )
 		test("fetches bills from an API and fails with 404 message error", async () => {
 			mockStore.bills.mockImplementationOnce(() => {                      // Creation d'un fonction afin qu'il me renvoie une erreur
@@ -151,6 +155,7 @@ describe("Given I am a user connected as Employee", () => {
 
 			expect(message).toBeTruthy();                                       // Je vévifie si le message d'erreur est present
 		});
+		
 		//Ce test vérifie quand une erreur se produit lors de la récupération des factures à partir de l'API (erreur 500 )
 		test("fetches bills from an API and fails with 500 message error", async () => {
 			mockStore.bills.mockImplementationOnce(() => {

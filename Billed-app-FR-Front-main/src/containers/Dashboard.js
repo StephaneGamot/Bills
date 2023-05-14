@@ -131,7 +131,7 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
-    if (this.counter === undefined || this.index !== index) this.counter = 0   // Si le compteur est indéfini ou si l'index actuel est différent de l'index alors le compteur est à 0
+    if (this.counter === undefined || this.index !== index) this.counter = 0   // Si le compteur est indéfini ou si l'index actuel est différent de l'index alors le compteur est remis à 0
     if (this.index === undefined || this.index !== index) this.index = index   // Je réinitialise l'index si l'index est indéfini ou différent de l'index précédent
     if (this.counter % 2 === 0) {                                              // Si le compteur est un nombre divisible par 2 (un nombre pair)
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})          // L'icon ne tourne pas (o°)

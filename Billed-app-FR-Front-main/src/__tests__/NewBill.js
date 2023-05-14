@@ -44,7 +44,7 @@ describe("Given I am connected as an employee", () => {
 			);
 
 			const html = NewBillUI();                                          // j'apelle la fonction qui représente NewBillUI() (en simple le contenu de la page en HTML)
-			document.body.innerHTML = html;
+			document.body.innerHTML = html;                                    // que j'insère 
 
 			const newBillInit = new NewBill({                                  // Création d'un instance de classe qui contient .....
 				document,
@@ -90,8 +90,8 @@ describe("Given I am connected as an employee", () => {
 			type: "Restaurant",
 		};
 		/* On simule l'appel à la méthode updateBill, puis on vérifie 
-    que les méthodes appropriées ont été appelées avec leurs arguments 
-    et que l’on est redirigé vers la bonne page */
+           que les méthodes appropriées ont été appelées avec leurs arguments 
+           et que l’on est redirigé vers la bonne page */
 		test("Then the bill should be updated and the user should be navigated to the Bills page", () => {
 			const updateMock = jest.fn().mockResolvedValue({ status: 200 });         //  Simule une opération réussie de mise à jour de facture.
 			const billsMock = { update: updateMock };                                // C'est le mock juste au dessus.
@@ -113,6 +113,7 @@ describe("Given I am connected as an employee", () => {
 			});
 		});
 
+		// La mise à jour devrait alors échouer et afficher une erreur
 		test("Then the bill update should fail and log an error", async () => {
 			const errorMsg = "Failed to update bill";                                // Création d'un message d'erreur (pour la simulation)
 			const updateMock = jest.fn().mockRejectedValue(new Error(errorMsg));     // Création d'un mock (fausse implémentation) de la fonction update qui renvoie une promesse rejetée, simulant un échec
@@ -141,54 +142,70 @@ describe("Given I am connected as an employee", () => {
 			}
 		});
 	});
-	describe("handleChangeFile", () => {
-		test("should update fileNameDisplay content when a valid file is selected", async () => {
+	describe("Given I am connected as an employee", () => {
+		// Il devrait appeler store.bills().create avec les données correctes lorsque handleChangeFile est appelé avec un fichier valide
+		test("should call store.bills().create with correct data when handleChangeFile is called with a valid file", () => {
 			// Mock DOM elements and store
-			const mockDocument = {                                                   // Création d'un faux objet document utilisé pour simuler le DOM
-				querySelector: jest.fn(() => ({
-					addEventListener: jest.fn(),
-				})),
-				querySelectorAll: jest.fn(() => []),
-				getElementById: jest.fn(() => ({
-					textContent: "",
-					src: "",
-				})),
+			const mockFile = new File([""], "image.jpg", { type: "image/jpeg" });   // Création un faux fichier pour simuler ... un fichier 
+			const fileInput = {
+				addEventListener: jest.fn(),                                        // création une nouvelle fonction mock. 
+				files: [mockFile],
+			}; 
+	
+			const formNewBill = { addEventListener: jest.fn() };
+	
+			const mockDocument = {                                                  // Création d'un faux document 
+				querySelector: jest.fn((selector) => {                              // création une nouvelle fonction mock pour simuler ce querySelector
+					if (selector === `input[data-testid="file"]`) {
+						return fileInput;
+					} else if (selector === `form[data-testid="form-new-bill"]`) {
+						return formNewBill;
+					}
+				}),
+				querySelectorAll: jest.fn(() => []),                                // création une nouvelle fonction mock, qui quand elle est appellée elle renvoi un tableau vide 
 			};
-
-			const mockStore = {                                                      // conçue pour simuler la création d'une nouvelle facture dans le magasin
+	
+			const createBillMock = jest.fn().mockResolvedValue({ fileUrl: "fileUrl", key: "key" });
+			const mockStore = {                                                     // Création d'une "imitation" de la note d'envoi
 				bills: () => ({
-					create: jest.fn(() => Promise.resolve({ fileUrl: "fileUrl", key: "key" })),
+					create: createBillMock,
 				}),
 			};
-
-			// Création d'un instance qui remplacera le document et le store
+	
 			const newBill = new NewBill({
 				document: mockDocument,
-				onNavigate: jest.fn(),
+				onNavigate: jest.fn(),                                              // Création une nouvelle fonction mock pour simuler un changement de page
 				store: mockStore,
 				localStorage: window.localStorage,
 			});
-
-			// Création d'une fausse fonction createFormData
+	
 			newBill.createFormData = jest.fn((file) => {
 				const formData = new FormData();
 				formData.append("file", file);
 				return formData;
 			});
-
-			// C'est un faux événement qui est utilisé pour simuler l'événement déclenché lorsque que l'on veut declencher un nouveau fichier
-			const mockEvent = {
-				preventDefault: jest.fn(),
-				target: {
+	
+			const mockEvent = {                                                     // Création d'un faux evenement
+				preventDefault: jest.fn(),                                          // Pour empecher le comportement par défaut 
+				target: {                                                           // Mais l'envoyer intentionnelement ici 
 					value: "C:\\fakepath\\image.jpg",
 				},
 			};
-			// Création d'un faux fichier pour simuler le fichier sélectionné
-			const mockFile = new File([""], "image.jpg", { type: "image/jpeg" });
-			mockDocument.querySelector.mockReturnValueOnce({ files: [mockFile] });
+	
+			newBill.handleChangeFile(mockEvent);
 
-			// On appelle la handleChangeFile (asynchrome donc on attent le retour de promesse avec Await)
-			await newBill.handleChangeFile(mockEvent); // handleChangeFile est appelée avec le mockEvent
+	// On vérifie que createBillMock a été appelé avec les bons arguments. 
+    //Si handleChangeFile fonctionne correctement, il doit appeler store.bills().create avec les données du fichier et des en-têtes spécifiques.
+			expect(createBillMock).toHaveBeenCalledWith({
+				data: newBill.createFormData(mockFile),
+				headers: {
+					noContentType: true,                   // On indique que la requête ne devrait pas inclure un en-tête 'Content-Type'.
+				},
+			});
 		});
 	});
+	
+	
+	
+	  
 });
